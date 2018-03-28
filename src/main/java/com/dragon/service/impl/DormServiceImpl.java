@@ -20,7 +20,6 @@ public class DormServiceImpl implements DormService{
 
 	@Autowired
 	private TdormitoryMapper dormMapper;
-	private DataList dataList;
 	private String dormNameTrim;
 	
 	@Override
@@ -38,7 +37,7 @@ public class DormServiceImpl implements DormService{
 		}
 		
 		List<Tdormitory> list = dormMapper.selectByExample(example);
-		PageInfo pageinf = new PageInfo(list);
+		PageInfo<Tdormitory> pageinf = new PageInfo<Tdormitory>(list);
 		
 		return new DataList(list,new PageInf(pageinf));
 	}

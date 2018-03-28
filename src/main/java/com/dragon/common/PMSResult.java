@@ -41,7 +41,7 @@ public class PMSResult {
 
 	public static PMSResult Ok() {
 		
-		return getInstance("200", null, null);
+		return getInstance("200", null, "成功");
 	}
 
 	public static PMSResult Fail(String msg) {

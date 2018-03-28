@@ -1,19 +1,16 @@
 package com.dragon.controller;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dragon.common.DataList;
 import com.dragon.common.PMSResult;
-import com.dragon.pojo.Tdormitory;
 import com.dragon.service.DormService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -21,6 +18,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
+@RequestMapping("/dorm")
 public class DormController {
 	@Autowired
 	private DormService dormService;
@@ -39,7 +37,7 @@ public class DormController {
 		@ApiImplicitParam(name = "pageSize", value = "每页行数", dataType = "Long", paramType = "query"),
 		@ApiImplicitParam(name = "dormName", value = "宿舍名", dataType = "String", paramType = "query") 
 	})
-	@GetMapping("/dorm")
+	@GetMapping()
 	public PMSResult findDormByArgs(
 			@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
 			@RequestParam(value = "pageSize", defaultValue = "12") Integer pageSize,
@@ -58,8 +56,8 @@ public class DormController {
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(name = "dormId", 	value = "宿舍号", dataType = "String", paramType = "query"),
 	})
-	@DeleteMapping("/dorm/{dormId}")
-	public PMSResult addDorm(
+	@DeleteMapping("/{dormId}")
+	public PMSResult deleteDorm(
 			@PathVariable(value = "dormId" ) String dormId){
 		Integer num = null;
 		try {
@@ -70,5 +68,17 @@ public class DormController {
 		}
 		return PMSResult.Ok(num, "获取成功");
 	}
+	
+	@ApiOperation(value = "添加宿舍", notes = "添加新的宿舍")
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(name = "dormId", 	value = "宿舍号", dataType = "String", paramType = "query"),
+	})
+	@PutMapping("/{dormId}")
+	public PMSResult addDorm(){
+		
+		
+		return null;
+	}
+	
 
 }
