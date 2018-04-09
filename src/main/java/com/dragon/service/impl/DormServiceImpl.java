@@ -2,12 +2,12 @@ package com.dragon.service.impl;
 
 import java.util.List;
 
+import com.dragon.mapper.TdormitoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dragon.common.DataList;
 import com.dragon.common.PageInf;
-import com.dragon.mapper.TdormitoryMapper;
 import com.dragon.pojo.Tdormitory;
 import com.dragon.pojo.TdormitoryExample;
 import com.dragon.pojo.TdormitoryExample.Criteria;
@@ -29,11 +29,8 @@ public class DormServiceImpl implements DormService{
 		
 		TdormitoryExample example = new TdormitoryExample();
 		Criteria criteria = example.createCriteria();
-		if(dormName != null){
-			dormNameTrim = dormName.replaceAll("\\s*", "");
-			if(!"".equals(dormNameTrim) && !"%%".equals(dormNameTrim)){
-				criteria.andDormitorynameLike(dormNameTrim);
-			}
+		if(dormName != null && dormName != ""){
+			criteria.andDormitorynameLike("%"+dormName+"%");
 		}
 		
 		List<Tdormitory> list = dormMapper.selectByExample(example);
@@ -44,8 +41,7 @@ public class DormServiceImpl implements DormService{
 
 	@Override
 	public Integer delDorm(String dormIds) throws Exception {
-		TdormitoryExample example = new TdormitoryExample();
-		Criteria criteria = example.createCriteria();
+
 		if(null == dormIds){
 			return 0;
 		}

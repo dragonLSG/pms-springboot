@@ -105,63 +105,63 @@ public class TnoticeExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
-        public Criteria andNoticidIsNull() {
-            addCriterion("noticid is null");
+        public Criteria andNoticeidIsNull() {
+            addCriterion("noticeid is null");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidIsNotNull() {
-            addCriterion("noticid is not null");
+        public Criteria andNoticeidIsNotNull() {
+            addCriterion("noticeid is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidEqualTo(Integer value) {
-            addCriterion("noticid =", value, "noticid");
+        public Criteria andNoticeidEqualTo(Integer value) {
+            addCriterion("noticeid =", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidNotEqualTo(Integer value) {
-            addCriterion("noticid <>", value, "noticid");
+        public Criteria andNoticeidNotEqualTo(Integer value) {
+            addCriterion("noticeid <>", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidGreaterThan(Integer value) {
-            addCriterion("noticid >", value, "noticid");
+        public Criteria andNoticeidGreaterThan(Integer value) {
+            addCriterion("noticeid >", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidGreaterThanOrEqualTo(Integer value) {
-            addCriterion("noticid >=", value, "noticid");
+        public Criteria andNoticeidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("noticeid >=", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidLessThan(Integer value) {
-            addCriterion("noticid <", value, "noticid");
+        public Criteria andNoticeidLessThan(Integer value) {
+            addCriterion("noticeid <", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidLessThanOrEqualTo(Integer value) {
-            addCriterion("noticid <=", value, "noticid");
+        public Criteria andNoticeidLessThanOrEqualTo(Integer value) {
+            addCriterion("noticeid <=", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidIn(List<Integer> values) {
-            addCriterion("noticid in", values, "noticid");
+        public Criteria andNoticeidIn(List<Integer> values) {
+            addCriterion("noticeid in", values, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidNotIn(List<Integer> values) {
-            addCriterion("noticid not in", values, "noticid");
+        public Criteria andNoticeidNotIn(List<Integer> values) {
+            addCriterion("noticeid not in", values, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidBetween(Integer value1, Integer value2) {
-            addCriterion("noticid between", value1, value2, "noticid");
+        public Criteria andNoticeidBetween(Integer value1, Integer value2) {
+            addCriterion("noticeid between", value1, value2, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticidNotBetween(Integer value1, Integer value2) {
-            addCriterion("noticid not between", value1, value2, "noticid");
+        public Criteria andNoticeidNotBetween(Integer value1, Integer value2) {
+            addCriterion("noticeid not between", value1, value2, "noticeid");
             return (Criteria) this;
         }
 

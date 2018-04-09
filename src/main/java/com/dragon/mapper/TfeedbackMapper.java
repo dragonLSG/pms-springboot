@@ -4,7 +4,9 @@ import com.dragon.pojo.Tfeedback;
 import com.dragon.pojo.TfeedbackExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface TfeedbackMapper {
     int countByExample(TfeedbackExample example);
 

@@ -3,14 +3,18 @@ package com.dragon.mapper;
 import com.dragon.pojo.Tuser;
 import com.dragon.pojo.TuserExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
+@Component
 public interface TuserMapper {
     int countByExample(TuserExample example);
 
     int deleteByExample(TuserExample example);
 
-    int deleteByPrimaryKey(Integer uid);
+    int deleteByPrimaryKey(String account);
 
     int insert(Tuser record);
 
@@ -18,7 +22,7 @@ public interface TuserMapper {
 
     List<Tuser> selectByExample(TuserExample example);
 
-    Tuser selectByPrimaryKey(Integer uid);
+    Tuser selectByPrimaryKey(String account);
 
     int updateByExampleSelective(@Param("record") Tuser record, @Param("example") TuserExample example);
 

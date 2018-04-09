@@ -3,8 +3,12 @@ package com.dragon.mapper;
 import com.dragon.pojo.ThourUse;
 import com.dragon.pojo.ThourUseExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
+@Component
 public interface ThourUseMapper {
     int countByExample(ThourUseExample example);
 

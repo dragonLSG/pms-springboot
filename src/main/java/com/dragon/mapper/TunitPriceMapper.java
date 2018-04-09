@@ -3,8 +3,12 @@ package com.dragon.mapper;
 import com.dragon.pojo.TunitPrice;
 import com.dragon.pojo.TunitPriceExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
+@Component
 public interface TunitPriceMapper {
     int countByExample(TunitPriceExample example);
 

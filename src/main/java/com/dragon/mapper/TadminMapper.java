@@ -3,8 +3,12 @@ package com.dragon.mapper;
 import com.dragon.pojo.Tadmin;
 import com.dragon.pojo.TadminExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
+@Component
 public interface TadminMapper {
     int countByExample(TadminExample example);
 

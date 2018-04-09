@@ -1,9 +1,11 @@
 package com.dragon.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Tnotice {
-    private Integer noticid;
+    private Integer noticeid;
 
     private String title;
 
@@ -13,12 +15,12 @@ public class Tnotice {
 
     private String publisher;
 
-    public Integer getNoticid() {
-        return noticid;
+    public Integer getNoticeid() {
+        return noticeid;
     }
 
-    public void setNoticid(Integer noticid) {
-        this.noticid = noticid;
+    public void setNoticeid(Integer noticeid) {
+        this.noticeid = noticeid;
     }
 
     public String getTitle() {
@@ -41,6 +43,7 @@ public class Tnotice {
         return publishdate;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
     public void setPublishdate(Date publishdate) {
         this.publishdate = publishdate;
     }

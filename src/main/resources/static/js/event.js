@@ -1,11 +1,15 @@
 var dormName = "";
 var id = 1;
 var ajaxPageInf;
-var defaultIndex = [ 1, 2, 3, 4, 5 ]
-$(function() {
+var defaultIndex = [1, 2, 3, 4, 5]
+var noticeEditor = null;
+/**
+ * button监控
+ */
+$(function () {
 
     /*全选按钮*/
-    $(".module_table thead tr th input:checkbox").click(function() {
+    $(".module_table thead tr th input:checkbox").click(function () {
         if ($(this).is(':checked')) {
             $("#table_" + id + " tbody input[type=checkbox]").prop("checked", true);
         } else {
@@ -14,112 +18,63 @@ $(function() {
     });
 
     /*更改每页行数，刷新列表*/
-    $(".SelectEvenNum select").change(function() {
-
-        switch (parseInt(id)) {
-            case 1:
-                break;
-            case 2:
-            	resetPagination(id, 2, defaultIndex)
-            	showtable_2(getSearchUserInf("sect"),"reload")
-                break;
-            case 3:
-                resetPagination(id, 2, defaultIndex)
-                showtable_3(getPageInf(id), dormName, "reload");
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-        }
+    $(".SelectEvenNum select").change(function () {
+        //初始化分页插件
+        resetPagination(id, 2, defaultIndex)
+        //加载数据
+        switchToShow(id, "reload")
     });
 
     /* 切换menu */
-    $(".ripple").click(function() {
+    $(".menu_item").click(function () {
 
-        /*设置菜单栏切换*/
-        $(".ripple").each(function() {
-            $(this).removeClass("active").css({
-                "background-color" : "white"
-            });
+        // 设置菜单栏切换
+        $(".menu_item").each(function () {
+            $(this).removeClass("active").css({"background-color": "white"});
         });
-        $(this).addClass("active").css({
-            "background-color" : "#F6F4F0"
-        });
+        $(this).addClass("active").css({"background-color": "#DCDCDC"});
 
+        // 清空content内容
         removeALlContent();
+        //设置 获取到的分页信息为null
+        ajaxPageInf = null;
 
+        // 设置 当前所在module
         var menu_id = $(this).attr("id");
         id = menu_id.split("_")[1];
+        //初始化 分页插件
+        if (id != 1) {
+            resetPagination(id, 2, defaultIndex)
+        }
+
+        //加载数据
         switch (parseInt(id)) {
             case 1:
+                showNoticeList();
                 break;
             case 2:
+                showtable_2(getSearchUserInf("all"), "reload")
                 break;
             case 3:
-                resetPagination(id, 2, defaultIndex)
                 showtable_3(getPageInf(id), dormName, "reload");
                 break;
             case 4:
+                showtable_4(getSearchNoticInf("all"), "reload")
                 break;
             case 5:
+                showtable_5(getSearchFeedbackInf("all"), "reload")
                 break;
         }
-        $("#contentPanel > #module_" + id).css({
-            "display" : "block"
+
+        //显示选中模块
+        $("#module_" + id).css({
+            "display": "block"
         });
 
     });
 
-    /********************用户管理**********************/
-    /* 查询用户 */
-    $("#module_2 .serchBar .btn").click(function(){
-    	
-        showtable_2(getSearchUserInf(),"reload");
-        	
-    })
-
-
-    /********************宿舍管理**********************/
-
-    /*批量删除宿舍*/
-    $("#deleteBtn3").click(function() {
-        var selectDormIds = "";
-        var trs = $("#table_3 tbody tr");
-        trs.each(function(i, item) {
-            if ($(item).find("input:eq(0)").is(':checked')) {
-                selectDormIds += $(item).children("td:eq(1)").text() + ",";
-            }
-        })
-        if ("" == selectDormIds) {
-            alert("请先选中要删除的记录")
-            return;
-        }
-        selectDormIds = selectDormIds.substring(0, selectDormIds.length - 1);
-        delDorm(selectDormIds)
-    })
-
-    /*查询宿舍*/
-    $("#module_3 .serchBar .panel-body .btn").click(function() {
-        /*select条件查询*/
-        dormName = "%";
-        if ($(this).is($("#module_3 .serchBar .panel-body .btn").eq(0))) {
-            $("#module_3 .serch_table select option:selected").each(function(i, item) {
-                dormName += item.text
-            })
-            dormName += $("#module_3 .serch_table input:eq(0)").val()
-        }
-        /*input条件查询*/
-        else {
-            dormName += $("#module_3 .serch_table input:eq(1)").val()
-        }
-        dormName += "%";
-        resetPagination(id, 2, defaultIndex);
-        showtable_3(getPageInf(id), dormName, "reset");
-    });
-
-    /*分页控制，下一页，上一页，最后一页。。*/
-    $(".bar_3 .pagination li").click(function() {
+    //分页控制，下一页，上一页，最后一页
+    $(".pagination li").click(function () {
         var pageNum = getPageInf(id).pageNum;
         var totalNum = ajaxPageInf.totalPageNum
         var selectText = $(this).find("a").text();
@@ -145,7 +100,7 @@ $(function() {
                     return false;
                 } else {
                     var args = new Array();
-                    var links = $(".bar_3 .pagination li").find("a");
+                    var links = $(".bar_" + id + " .pagination li").find("a");
                     args[0] = links[2].innerHTML
                     args[1] = links[3].innerHTML
                     args[2] = links[4].innerHTML
@@ -157,7 +112,7 @@ $(function() {
                             args[i] = parseInt(args[i]) - 5;
                         }
                     }
-                    resetPagination(id, 2, args)
+                    resetPagination(id, 6, args)
                 }
             }
             /* 下一页 */
@@ -166,7 +121,7 @@ $(function() {
                     return false;
                 } else {
                     var args = new Array();
-                    var links = $(".bar_3 .pagination li").find("a");
+                    var links = $(".bar_" + id + " .pagination li").find("a");
                     args[0] = links[2].innerHTML
                     args[1] = links[3].innerHTML
                     args[2] = links[4].innerHTML
@@ -181,36 +136,177 @@ $(function() {
                     resetPagination(id, 2, args)
                 }
             } else {
-                $(".bar_3 .pagination li").removeClass("active");
+                $(".bar_" + id + " .pagination li").removeClass("active");
                 $(this).addClass("active");
             }
-            showtable_3(getPageInf(id), dormName, "reset");
+            switchToShow(id, "reset");
         }
     })
 
-    /*遮盖层*/
-    $("#module_3").mLoading({
-        text : "", //加载文字，默认值：加载中...
-        icon : "", //加载图标，默认值：一个小型的base64的gif图片
-        html : false, //设置加载内容是否是html格式，默认值是false
-        content : "", //忽略icon和text的值，直接在加载框中显示此值
-        mask : true //是否显示遮罩效果，默认显示
+/***********************用户管理************************************/
+
+    /* 查询用户 */
+    $("#module_2 .serchBar .btn").click(function () {
+
+        showtable_2(getSearchUserInf("section"), "reload");
+
+    })
+
+    /* 批量删除用户btn */
+    $("#deleteBtn2").click(function () {
+        var selectAccounts = "";
+        var trs = $("#table_2 tbody tr");
+        trs.each(function (i, item) {
+            if ($(item).find("input:eq(0)").is(':checked')) {
+                selectAccounts += $(item).children("td:eq(1)").text() + ",";
+            }
+        })
+        if ("" == selectAccounts) {
+            alert("请先选中要删除的记录")
+            return;
+        }
+        selectAccounts = selectAccounts.substring(0, selectAccounts.length - 1);
+        delUser(selectAccounts)
+    })
+
+
+
+/********************宿舍管理***************************************/
+
+    //批量删除宿舍btn
+    $("#deleteBtn3").click(function () {
+        var selectDormIds = "";
+        var trs = $("#table_3 tbody tr");
+        trs.each(function (i, item) {
+            if ($(item).find("input:eq(0)").is(':checked')) {
+                selectDormIds += $(item).children("td:eq(1)").text() + ",";
+            }
+        })
+        if ("" == selectDormIds) {
+            alert("请先选中要删除的记录")
+            return;
+        }
+        selectDormIds = selectDormIds.substring(0, selectDormIds.length - 1);
+        delDorm(selectDormIds)
+    })
+
+    //查询宿舍btn
+    $("#module_3 .serchBar .panel-body .btn").click(function () {
+        dormName = ""
+        /*select条件查询*/
+        if ($(this).is($("#module_3 .serchBar .panel-body .btn").eq(0))) {
+            $("#module_3 .serch_table select option:selected").each(function (i, item) {
+                dormName += item.text
+            })
+            dormName += $("#module_3 .serch_table input:eq(0)").val()
+        }
+        /*input条件查询*/
+        else {
+            dormName = $.trim($("#module_3 .serch_table input:eq(1)").val());
+        }
+        resetPagination(id, 2, defaultIndex);
+        showtable_3(getPageInf(id), dormName, "reset");
     });
 
-    /********************通告管理**********************/
+    // /*遮盖层*/
+    // $("#module_3").mLoading({
+    //     text: "", //加载文字，默认值：加载中...
+    //     icon: "", //加载图标，默认值：一个小型的base64的gif图片
+    //     html: false, //设置加载内容是否是html格式，默认值是false
+    //     content: "", //忽略icon和text的值，直接在加载框中显示此值
+    //     mask: true //是否显示遮罩效果，默认显示
+    // });
+
+
+/*************************通告管理*****************************************/
+
+    /* 查询通告 */
+    $("#module_4 .serchBar .btn").click(function () {
+        showtable_4(getSearchNoticInf("section"), "reload");
+    })
+    
+    /*添加通告*/
+    $("#addNotice").click(function () {
+
+        createRichEditor();
+
+        var noticeid = $("#noticeUpdate .modal-content").attr("id");
+        if (noticeid != null && typeof(noticeid) != 'undefined'){
+            $("#noticeUpdate .modal-content").attr("id","")
+            $("#noticeTitle").val("");
+            noticeEditor.txt.html("");
+        }
+
+        //点击外部不关闭模态框
+        $("#noticeUpdate").modal({backdrop: 'static', keyboard: false});
+        $("#noticeUpdate").modal("show");
+    })
+    
+    //删除通告
+    $("#deleteBtn4").click(function () {
+        var selectNoticeIds = "";
+        var trs = $("#table_4 tbody tr");
+        trs.each(function (i, item) {
+            if ($(item).find("input:eq(0)").is(':checked')) {
+                selectNoticeIds += $(item).children("td:eq(1)").text() + ",";
+            }
+        })
+        if ("" == selectNoticeIds) {
+            alert("请先选中要删除的记录")
+            return;
+        }
+        selectNoticeIds = selectNoticeIds.substring(0, selectNoticeIds.length - 1);
+        delNotice(selectNoticeIds)
+    })
+
 })
+
+
+/*************************反馈管理*****************************************/
+
+    /* 查询通告 */
+    $("#module_5 .serchBar .btn").click(function () {
+    showtable_5(getSearchFeedbackInf("section"), "reload");
+})
+
+/**
+ * function
+ */
+
 
 
 
 /****************************公共function**********************************/
+
+/*根据module_id调用 不同加载不同module的数据 */
+function switchToShow(id, option) {
+
+    switch (parseInt(id)) {
+        case 1:
+            break;
+        case 2:
+            showtable_2(getSearchUserInf("section"), option)
+            break;
+        case 3:
+            showtable_3(getPageInf(id), dormName, option);
+            break;
+        case 4:
+            showtable_4(getSearchNoticInf("section"), option)
+            break;
+        case 5:
+            showtable_5(getSearchFeedbackInf("section"), option)
+            break;
+    }
+}
+
 /*获取分页信息*/
 function getPageInf(module_id) {
     var pageNum = $(".bar_" + module_id + " .pagination").find("li.active").text();
     var pageSize = $(".bar_" + module_id + " .SelectEvenNum select").find("option:selected").text();
 
     var pageInf = {
-        pageNum : pageNum,
-        pageSize : pageSize
+        pageNum: pageNum,
+        pageSize: pageSize
     }
     return pageInf;
 }
@@ -219,153 +315,220 @@ function getPageInf(module_id) {
 function resetPagination(id, activeIndex, args) {
     var li = $(".bar_" + id + " .pagination li");
     li.removeClass("active");
-    li[activeIndex].className = "active"
+    li.eq(activeIndex).addClass("active")
+
     var links = $(li).find("a");
+    links.removeClass("disabled")
+    links.css("background-color","white")
+    // links.removeClass("disabled")
     links[2].innerHTML = args[0]
     links[3].innerHTML = args[1]
     links[4].innerHTML = args[2]
     links[5].innerHTML = args[3]
     links[6].innerHTML = args[4]
+    if(ajaxPageInf != null){
+        $.each(args,function (index, value) {
+            if(value > ajaxPageInf.totalPageNum){
+                links.eq(index+2).addClass("disabled")
+                links.eq(index+2).css("background-color","#f1f1f1")
+            }
+        })
+    }
 }
 
 /* 隐藏内容区域 */
 function removeALlContent() {
-    $("#contentPanel").children().each(function() {
+    $(".content").children().each(function () {
         $(this).css({
-            "display" : "none"
+            "display": "none"
         });
     });
 }
 
+/* 删除一条 或 多条数据 param：请求的url，删除的对应id*/
+function deleteBySelects(ReqUrl, selects) {
+    if (!confirm("确定删除选中的记录么？")) {
+        return;
+    }
+    var url = ReqUrl + "/" + selects;
+    $.ajax({
+        type: 'delete',
+        url: url,
+        dataType: 'json',
+        timeout: '10000',
+        success: function (result) {
+            if (result.status == "200" && result.data != null) {
+                alert("共" + result.data + "条记录，删除成功!")
+                switchToShow(id, "reset")
+            } else if (result.status == "500") {
+                $("#exceptionPanel").modal("show");
+                setTimeout(function () {
+                    $("#exceptionPanel").modal("hide");
+                }, 1500)
+            }
+        }
+    })
+
+}
+
+
+/****************************数据统计function**********************************/
+
+function showNoticeList(pageSize) {
+    var pageNum = 1;
+    if (pageSize == null) {
+        pageSize = 6;
+    }
+    $("#notices").empty();
+    var args = {pageNum: pageNum, pageSize: pageSize}
+    $.ajax({
+        type: 'GET',
+        url: '/notice',
+        data: args,
+        dataType: 'json',
+        success: function (result, status) {
+            if (result.status == "200" && result.data != null) {
+
+                var data = result.data;
+                $.each(data.data, function (key, value) {
+                    var li = "<li class=\"text-left\"><span class=\"right\">" +
+                        value.publishdate + "</span><span class=\"right\">" +
+                        value.publisher + "&nbsp;&nbsp;</span><a href=\"#\"><span class=\"fa fa-angle-right\"></span>" +
+                        value.title + "</a></li>"
+                    $("#notices").append(li);
+                })
+            }
+        }
+
+    })
+
+}
+
+
 /*****************************用户管理function********************************/
-function getSearchUserInf(option){
-	var pageInf = getPageInf(2);
+//获取 搜索条件信息
+function getSearchUserInf(option) {
+    var pageInf = getPageInf(2);
     var username = "";
     var account = "";
-    var	dormname = "";
+    var dormname = "";
     var status = "2";
-	if(option == "sect"){
-		var inputs = $("#module_2 .serch_table input");
-	    username = inputs.eq(0).val();
-	    account = inputs.eq(1).val();
-	    dormname = inputs.eq(2).val();
-	    status = $("#module_2 .serch_table select option:selected").eq(0).attr("id");
-	}
-    var userSearchInf = {pageNum:pageInf.pageNum,pageSize:pageInf.pageSize,
-        username:username,account:account,dormitoryname:dormname,status:status}
+    if (option == "section") {
+        var inputs = $("#module_2 .serch_table input");
+        username = $.trim(inputs.eq(0).val());
+        account = $.trim(inputs.eq(1).val());
+        dormname = $.trim(inputs.eq(2).val());
+        status = $("#module_2 .serch_table select option:selected").eq(0).attr("value");
+    }
+    var userSearchInf = {
+        pageNum: pageInf.pageNum, pageSize: pageInf.pageSize,
+        username: username, account: account, dormitoryname: dormname, status: status
+    }
     return userSearchInf;
 }
 
-function showtable_2(args,option){
-	
-	$("#table_2 tbody").empty(); //清空tbody
+/*获取用户列表*/
+function showtable_2(args, option) {
+    if (option == "reload") {
+        $("#table_2 tbody").empty(); //清空tbody
+    }
     $("#table_2 thead input[type=checkbox]").prop("checked", false);
     $.ajax({
-        type : 'GET',
-        url : '/user',
-        dataType : 'json',
-        timeout : '10000',
-        data : args,
-        success : function(result, status) {
-        	if (status == "success" && result != null) {
-                var trs = null;
+        type: 'GET',
+        url: '/user',
+        dataType: 'json',
+        timeout: '10000',
+        data: args,
+        success: function (result) {
+            if (result.status == "200" && result.data != null) {
                 var data = result.data;
                 if (option == "reload") {
-                    $.each(data.data, function(key, value) {
-                    	var stat_str = value.status == 1 ? "在校":"离校";
-                        trs += "<tr><td><input type='checkbox'></td><td>" + value.account +
+                    $.each(data.data, function (key, value) {
+                        var stat_str = value.status == 1 ? "在校" : "离校";
+                        var trs = "<tr><td><input type='checkbox'></td><td>" + value.account +
                             "</td><td>" + value.username + "</td><td>" + value.dormitoryname +
                             "</td><td>" + value.mobile + "</td><td>" + value.email +
-                            "</td><td>" + stat_str + "</td><td><a href='javascript:delUser(" + value.dormitoryid +
-                            ")'>删除</a><a href='#'>编辑</a></td></tr>"
-
+                            "</td><td>" + stat_str + "</td><td><a href='javascript:delUser(" + value.account +
+                            ")'>删除</a><a href='javascript:void(0);'>编辑</a></td></tr>"
+                        $("#table_2 tbody").append(trs);
                     })
-                    $("#table_2 tbody").append(trs);
+
                 } else if (option == "reset") {
                     var trs = $("#table_2 tbody tr");
+                    trs.css("display","table-row")
                     var len = trs.length;
                     var i;
                     for (i = 0; i < len; i++) {
                         var tds = trs[i].childNodes;
                         if (typeof (data.data[i]) != "undefined") {
                             tds[0].innerHTML = "<input type='checkbox'>"
-                            tds[1].innerHTML = data.data[i].dormitoryid;
-                            tds[2].innerHTML = data.data[i].dormitoryname;
-                            tds[3].innerHTML = data.data[i].balance;
-                            tds[4].innerHTML = "<a href='javascript:void(0);' onclick='delDorm(" + data.data[i].dormitoryid + ")'>删除</a><a href='#'>编辑</a>"
+                            tds[1].innerHTML = data.data[i].account;
+                            tds[2].innerHTML = data.data[i].username;
+                            tds[3].innerHTML = data.data[i].dormitoryname;
+                            tds[4].innerHTML = data.data[i].mobile;
+                            tds[5].innerHTML = data.data[i].email;
+                            tds[6].innerHTML = data.data[i].status == 1 ? "在校" : "离校";
+                            tds[7].innerHTML = "<a href='javascript:void(0);' onclick='delUser(" + data.data[i].account + ")'>删除</a><a href='javascript:void(0);'>编辑</a>"
                         } else {
-                            tds[0].innerHTML = ""
-                            tds[1].innerHTML = ""
-                            tds[2].innerHTML = ""
-                            tds[3].innerHTML = ""
-                            tds[4].innerHTML = ""
+                            trs.eq(i).css("display","none")
                         }
                     }
                 }
                 ajaxPageInf = data.pageInf;
                 $(".bar_2 .sumNum").text("共" + ajaxPageInf.totalNum + "条数据");
+            } else if (result.status == "500") {
+                $("#exceptionPanel").modal("show");
+                setTimeout(function () {
+                    $("#exceptionPanel").modal("hide");
+                }, 1500)
             }
         }
     })
 }
+
+/*删除用户*/
+function delUser(accounts) {
+    deleteBySelects("/user", accounts)
+}
+
+
 
 /*****************************宿舍管理function********************************/
-
-/*删除宿舍*/
-function delDorm(dormIds) {
-    if (!confirm("确定删除选中的记录么？")) {
-        return;
-    }
-    $("#module_3").mLoading("show");
-    var url = "/dorm/" + dormIds;
-    $.ajax({
-        type : 'delete',
-        url : url,
-        dataType : 'json',
-        timeout : '10000',
-        success : function(data, status) {
-            if (status == "success") {
-                alert("共" + data.data + "条记录，删除成功!")
-                showtable_3(getPageInf(id), dormName, "reset");
-            }
-        }
-    })
-    $("#module_3").mLoading("hide");
-}
 
 /*获取宿舍列表*/
 function showtable_3(pageInf, dormName, option) {
     if (option == "reload") {
-        $("#module_3").mLoading("show");
+        // $("#module_3").mLoading("show");
         $("#table_3 tbody").empty(); //清空tbody
     }
     $("#table_3 thead input[type=checkbox]").prop("checked", false);
     var args = {
-        pageNum : pageInf.pageNum,
-        pageSize : pageInf.pageSize,
-        dormName : dormName
+        pageNum: pageInf.pageNum,
+        pageSize: pageInf.pageSize,
+        dormName: dormName
     }
     $.ajax({
-        type : 'GET',
-        url : '/dorm',
-        data : args,
-        dataType : 'json',
-        timeout : '10000',
-        success : function(result, status) {
-            if (status == "success" && result != null) {
+        type: 'GET',
+        url: '/dorm',
+        data: args,
+        dataType: 'json',
+        timeout: '10000',
+        success: function (result) {
+            if (result.status == "200" && result.data != null) {
                 var trs = null;
                 var data = result.data;
                 if (option == "reload") {
-                    $.each(data.data, function(key, value) {
+                    $.each(data.data, function (key, value) {
                         trs += "<tr><td><input type='checkbox'></td><td>" + value.dormitoryid +
                             "</td><td>" + value.dormitoryname + "</td><td>" + value.balance +
                             "</td><td><a href='javascript:delDorm(" + value.dormitoryid +
-                            ")'>删除</a><a href='#'>编辑</a></td></tr>"
+                            ")'>删除</a><a href='javascript:void(0);'>编辑</a></td></tr>"
 
                     })
                     $("#table_3 tbody").append(trs);
                 } else if (option == "reset") {
                     var trs = $("#table_3 tbody tr");
+                    trs.css("display","table-row")
                     var len = trs.length;
                     var i;
                     for (i = 0; i < len; i++) {
@@ -375,24 +538,291 @@ function showtable_3(pageInf, dormName, option) {
                             tds[1].innerHTML = data.data[i].dormitoryid;
                             tds[2].innerHTML = data.data[i].dormitoryname;
                             tds[3].innerHTML = data.data[i].balance;
-                            tds[4].innerHTML = "<a href='javascript:void(0);' onclick='delDorm(" + data.data[i].dormitoryid + ")'>删除</a><a href='#'>编辑</a>"
+                            tds[4].innerHTML = "<a href='javascript:void(0);' onclick='delDorm(" + data.data[i].dormitoryid + ")'>删除</a><a href='javascript:void(0);'>编辑</a>"
                         } else {
-                            tds[0].innerHTML = ""
-                            tds[1].innerHTML = ""
-                            tds[2].innerHTML = ""
-                            tds[3].innerHTML = ""
-                            tds[4].innerHTML = ""
+                            trs.eq(i).css("display","none")
                         }
                     }
                 }
                 ajaxPageInf = data.pageInf;
                 $(".bar_3 .sumNum").text("共" + ajaxPageInf.totalNum + "条数据");
-                $("#module_3").mLoading("hide");
+            } else if (result.status == "500") {
+                $("#exceptionPanel").modal("show");
+                setTimeout(function () {
+                    $("#exceptionPanel").modal("hide");
+                }, 1500)
             }
         },
-        error : function(status) {
-            $("#module_3").mLoading("hide");
+        error: function (status) {
             alert("请求失败！")
         }
     });
+}
+
+/*删除宿舍*/
+function delDorm(dormIds) {
+    deleteBySelects("/dorm", dormIds)
+}
+
+
+
+
+/*****************************通告function********************************/
+
+/* 获取通告列表 */
+function showtable_4(args, option) {
+    if (option == "reload") {
+        $("#table_4 tbody").empty(); //清空tbody
+    }
+    $("#table_4 thead input[type=checkbox]").prop("checked", false);
+    $.ajax({
+        type: 'GET',
+        url: '/notice',
+        dataType: 'json',
+        timeout: '10000',
+        data: args,
+        success: function (result) {
+            if (result.status == "200" && result.data != null) {
+                var data = result.data;
+                if (option == "reload") {
+                    $.each(data.data, function (key, value) {
+                        var trs = "<tr><td><input type='checkbox'></td><td>" + value.noticeid +
+                            "</td><td>" + value.title + "</td><td><a href='javascript:showNoticContent(" + value.noticeid +
+                            ")'>点击查看内容详情</a></td><td>" + value.publisher + "</td><td>" + value.publishdate +
+                            "</td><td><a href='javascript:delNotice(" + value.noticeid +
+                            ")'>删除</a><a href='javascript:editNotice("+ value.noticeid +")'>编辑</a></td></tr>"
+                        $("#table_4 tbody").append(trs);
+                    })
+
+                } else if (option == "reset") {
+                    var trs = $("#table_4 tbody tr");
+                    trs.css("display","table-row")
+                    var len = trs.length;
+                    var i;
+                    for (i = 0; i < len; i++) {
+                        var tds = trs[i].childNodes;
+                        if (typeof (data.data[i]) != "undefined") {
+                            tds[0].innerHTML = "<input type='checkbox'>"
+                            tds[1].innerHTML = data.data[i].noticeid;
+                            tds[2].innerHTML = data.data[i].title;
+                            tds[3].innerHTML = "<a href='javascript:showNoticContent(" + data.data[i].noticeid + ")'>点击查看内容详情</a>"
+                            tds[4].innerHTML = data.data[i].publisher;
+                            tds[5].innerHTML = data.data[i].publishdate;
+                            tds[6].innerHTML = "<a href='javascript:void(0);' onclick='delNotice(" + data.data[i].noticeid + ")'>删除</a><a href='javascript:void(0);'>编辑</a>"
+                        } else {
+                            trs.eq(i).css("display","none")
+                        }
+                    }
+                }
+                ajaxPageInf = data.pageInf;
+                $(".bar_4 .sumNum").text("共" + ajaxPageInf.totalNum + "条数据");
+            } else if (result.status == "500") {
+                $("#exceptionPanel").modal("show");
+                setTimeout(function () {
+                    $("#exceptionPanel").modal("hide");
+                }, 1500)
+            }
+        }
+    })
+}
+
+/*获取搜索条件信息*/
+function getSearchNoticInf(option) {
+    var pageInf = getPageInf(id);
+    var title = "";
+    var publisher = "";
+    var startDate = "";
+    var endDate = "";
+    if (option == "section") {
+        var inputs = $("#module_4 .serch_table input");
+        title = $.trim(inputs.eq(0).val());
+        publisher = $.trim(inputs.eq(1).val());
+        startDate = inputs.eq(2).val();
+        endDate = inputs.eq(3).val();
+    }
+    var noticeSearchInf = {
+        pageNum: pageInf.pageNum, pageSize: pageInf.pageSize,
+        title: title, publisher: publisher, startDate: startDate, endDate: endDate
+    }
+    return noticeSearchInf;
+}
+
+/* 删除通告 */
+function delNotice(ids) {
+    deleteBySelects("/notice", ids)
+}
+
+/*获取单条通告的内容，return：{title,content,publisher,publishdate }*/
+function getNoticeContent(noticeid) {
+    var data = null;
+    var args = {noticeid: noticeid}
+    $.ajax({
+        type: 'GET',
+        url: '/notice/content',
+        data: args,
+        dataType: 'json',
+        async: false,
+        success: function (result, status) {
+            if (result.status == "200" && result.data != null) {
+                data = result.data;
+            }
+        }
+    })
+    return data;
+}
+
+/*显示单条通告的内容*/
+function showNoticContent(noticeid) {
+    var data = getNoticeContent(noticeid);
+
+    $("#noticeContent .modal-title").empty();
+    $("#noticeContent .modal-body").empty();
+    $("#noticeContent .modal-footer").empty();
+
+    $("#noticeContent .modal-title").append(data.title);
+    $("#noticeContent .modal-body").append(data.content);
+    $("#noticeContent .modal-footer").append("by: " + data.publisher + "&nbsp;&nbsp;&nbsp;Date: " + data.publishdate);
+
+    $("#noticeContent").modal("show");
+}
+
+/*编辑单条通告的内容*/
+function editNotice(noticeid){
+
+    createRichEditor();
+
+    var data = getNoticeContent(noticeid);
+    //title
+    $("#noticeTitle").val(data.title);
+    //noticeid
+    $("#noticeUpdate .modal-content").attr("id",noticeid);
+    //content
+    noticeEditor.txt.html(data.content)
+
+    //点击外部不关闭模态框
+    $("#noticeUpdate").modal({backdrop: 'static', keyboard: false});
+    $("#noticeUpdate").modal("show");
+}
+
+/* 提交内容 */
+function submitNotice(){
+    //获取noticeid，若为空，则是add，否则update
+    var noticeid = $("#noticeUpdate .modal-content").attr("id");
+    var content = noticeEditor.txt.html();
+    var title = $("#noticeTitle").val();
+    var publisher = 'Kim'
+
+    var args = {noticeid:noticeid, title:title, content:content, publisher:publisher}
+    $.ajax({
+        type: 'POST',
+        url: '/notice',
+        dataType: 'json',
+        timeout: '10000',
+        data: args,
+        success: function(result){
+            if (result.status == '200' && result.data !=null){
+                if (noticeid != null && noticeid != ''){
+                    alert("已成功更新"+ result.data +"条通告！")
+                }else{
+                    alert("已成功添加"+ result.data +"条通告！")
+                }
+                showtable_4(getSearchNoticInf("section"),"reload")
+                $("#noticeUpdate").modal("hide");
+            }
+        }
+    })
+
+}
+
+//创建富文本编辑器
+function createRichEditor() {
+
+    var E = window.wangEditor
+    if (noticeEditor == null) {
+        noticeEditor = new E('#noticeRichEditor')
+        noticeEditor.create()
+    }
+}
+
+
+
+/*****************************反馈function********************************/
+//获取 搜索条件信息
+function getSearchFeedbackInf(option) {
+    var pageInf = getPageInf(id);
+    var title = "";
+    var startDate = "";
+    var endDate = "";
+    var status = "2";
+    if (option == "section") {
+        var inputs = $("#module_5 .serch_table input");
+        title = $.trim(inputs.eq(0).val());
+        startDate = inputs.eq(1).val();
+        endDate = inputs.eq(2).val();
+        status = $("#module_5 .serch_table select option:selected").eq(0).attr("value");
+    }
+    var searchInf = {
+        pageNum: pageInf.pageNum, pageSize: pageInf.pageSize,
+        title: title, startDate: startDate, endDate: endDate, status: status
+    }
+    return searchInf;
+}
+
+/* 获取反馈列表 */
+function showtable_5(args, option) {
+    if (option == "reload") {
+        $("#table_5 tbody").empty(); //清空tbody
+    }
+    $("#table_5 thead input[type=checkbox]").prop("checked", false);
+    $.ajax({
+        type: 'GET',
+        url: '/feedback',
+        dataType: 'json',
+        timeout: '10000',
+        data: args,
+        success: function (result) {
+            if (result.status == "200" && result.data != null) {
+                var data = result.data;
+                if (option == "reload") {
+                    $.each(data.data, function (key, value) {
+                        var status = value.fdate == 0 ? "未处理":"已处理"
+                        var trs = "<tr><td><input type='checkbox'></td><td>" + value.fid +
+                            "</td><td>" + value.title + "</td><td><a href='javascript:showFeedbackContent(" + value.fid +
+                            ")'>点击查看内容详情</a></td><td>" + value.sender + "</td><td>" + value.fstatus +
+                            "</td><td>"+status+"</td><td><a href='javascript:delFeedback(" + value.fid +
+                            ")'>删除</a><a href='javascript:editNotice("+ value.fid +")'>处理</a></td></tr>"
+                        $("#table_5 tbody").append(trs);
+                    })
+
+                } else if (option == "reset") {
+                    var trs = $("#table_5 tbody tr");
+                    trs.css("display","table-row")
+                    var len = trs.length;
+                    var i;
+                    for (i = 0; i < len; i++) {
+                        var tds = trs[i].childNodes;
+                        if (typeof (data.data[i]) != "undefined") {
+                            tds[0].innerHTML = "<input type='checkbox'>"
+                            tds[1].innerHTML = data.data[i].fid;
+                            tds[2].innerHTML = data.data[i].title;
+                            tds[3].innerHTML = "<a href='javascript:showNoticContent(" + data.data[i].fid + ")'>点击查看内容详情</a>"
+                            tds[4].innerHTML = data.data[i].sender;
+                            tds[5].innerHTML = data.data[i].fstatus == 0 ? "未处理":"已处理";
+                            tds[6].innerHTML = data.data[i].fdate;
+                            tds[7].innerHTML = "<a href='javascript:void(0);' onclick='delNotice(" + data.data[i].fid + ")'>删除</a><a href='javascript:void(0);'>编辑</a>"
+                        } else {
+                            trs.eq(i).css("display","none")
+                        }
+                    }
+                }
+                ajaxPageInf = data.pageInf;
+                $(".bar_4 .sumNum").text("共" + ajaxPageInf.totalNum + "条数据");
+            } else if (result.status == "500") {
+                $("#exceptionPanel").modal("show");
+                setTimeout(function () {
+                    $("#exceptionPanel").modal("hide");
+                }, 1500)
+            }
+        }
+    })
 }

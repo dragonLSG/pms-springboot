@@ -3,14 +3,18 @@ package com.dragon.mapper;
 import com.dragon.pojo.Tnotice;
 import com.dragon.pojo.TnoticeExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
+@Component
 public interface TnoticeMapper {
     int countByExample(TnoticeExample example);
 
     int deleteByExample(TnoticeExample example);
 
-    int deleteByPrimaryKey(Integer noticid);
+    int deleteByPrimaryKey(Integer noticeid);
 
     int insert(Tnotice record);
 
@@ -18,7 +22,7 @@ public interface TnoticeMapper {
 
     List<Tnotice> selectByExample(TnoticeExample example);
 
-    Tnotice selectByPrimaryKey(Integer noticid);
+    Tnotice selectByPrimaryKey(Integer noticeid);
 
     int updateByExampleSelective(@Param("record") Tnotice record, @Param("example") TnoticeExample example);
 

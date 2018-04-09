@@ -2,9 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dragon.mapper.TuserMapper" >
   <resultMap id="BaseResultMap" type="com.dragon.pojo.Tuser" >
-    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <id column="account" property="account" jdbcType="CHAR" />
     <result column="username" property="username" jdbcType="VARCHAR" />
-    <result column="account" property="account" jdbcType="CHAR" />
     <result column="passwd" property="passwd" jdbcType="VARCHAR" />
     <result column="dormitoryName" property="dormitoryname" jdbcType="CHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
@@ -70,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    uid, username, account, passwd, dormitoryName, mobile, email, status
+    account, username, passwd, dormitoryName, mobile, email, status
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dragon.pojo.TuserExample" >
     select
@@ -86,15 +85,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from tuser
-    where uid = #{uid,jdbcType=INTEGER}
+    where account = #{account,jdbcType=CHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tuser
-    where uid = #{uid,jdbcType=INTEGER}
+    where account = #{account,jdbcType=CHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.dragon.pojo.TuserExample" >
     delete from tuser
@@ -103,24 +102,21 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.dragon.pojo.Tuser" >
-    insert into tuser (uid, username, account, 
-      passwd, dormitoryName, mobile, 
-      email, status)
-    values (#{uid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{account,jdbcType=CHAR}, 
-      #{passwd,jdbcType=VARCHAR}, #{dormitoryname,jdbcType=CHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT})
+    insert into tuser (account, username, passwd, 
+      dormitoryName, mobile, email, 
+      status)
+    values (#{account,jdbcType=CHAR}, #{username,jdbcType=VARCHAR}, #{passwd,jdbcType=VARCHAR}, 
+      #{dormitoryname,jdbcType=CHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.dragon.pojo.Tuser" >
     insert into tuser
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="uid != null" >
-        uid,
+      <if test="account != null" >
+        account,
       </if>
       <if test="username != null" >
         username,
-      </if>
-      <if test="account != null" >
-        account,
       </if>
       <if test="passwd != null" >
         passwd,
@@ -139,14 +135,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="uid != null" >
-        #{uid,jdbcType=INTEGER},
+      <if test="account != null" >
+        #{account,jdbcType=CHAR},
       </if>
       <if test="username != null" >
         #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        #{account,jdbcType=CHAR},
       </if>
       <if test="passwd != null" >
         #{passwd,jdbcType=VARCHAR},
@@ -174,14 +167,11 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update tuser
     <set >
-      <if test="record.uid != null" >
-        uid = #{record.uid,jdbcType=INTEGER},
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=CHAR},
       </if>
       <if test="record.username != null" >
         username = #{record.username,jdbcType=VARCHAR},
-      </if>
-      <if test="record.account != null" >
-        account = #{record.account,jdbcType=CHAR},
       </if>
       <if test="record.passwd != null" >
         passwd = #{record.passwd,jdbcType=VARCHAR},
@@ -205,9 +195,8 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update tuser
-    set uid = #{record.uid,jdbcType=INTEGER},
+    set account = #{record.account,jdbcType=CHAR},
       username = #{record.username,jdbcType=VARCHAR},
-      account = #{record.account,jdbcType=CHAR},
       passwd = #{record.passwd,jdbcType=VARCHAR},
       dormitoryName = #{record.dormitoryname,jdbcType=CHAR},
       mobile = #{record.mobile,jdbcType=VARCHAR},
@@ -222,9 +211,6 @@
     <set >
       <if test="username != null" >
         username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        account = #{account,jdbcType=CHAR},
       </if>
       <if test="passwd != null" >
         passwd = #{passwd,jdbcType=VARCHAR},
@@ -242,17 +228,16 @@
         status = #{status,jdbcType=TINYINT},
       </if>
     </set>
-    where uid = #{uid,jdbcType=INTEGER}
+    where account = #{account,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.dragon.pojo.Tuser" >
     update tuser
     set username = #{username,jdbcType=VARCHAR},
-      account = #{account,jdbcType=CHAR},
       passwd = #{passwd,jdbcType=VARCHAR},
       dormitoryName = #{dormitoryname,jdbcType=CHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT}
-    where uid = #{uid,jdbcType=INTEGER}
+    where account = #{account,jdbcType=CHAR}
   </update>
 </mapper>

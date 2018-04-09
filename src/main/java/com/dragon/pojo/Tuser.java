@@ -1,11 +1,9 @@
 package com.dragon.pojo;
 
 public class Tuser {
-    private Integer uid;
+    private String account;
 
     private String username;
-
-    private String account;
 
     private String passwd;
 
@@ -17,12 +15,12 @@ public class Tuser {
 
     private Byte status;
 
-    public Integer getUid() {
-        return uid;
+    public String getAccount() {
+        return account;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setAccount(String account) {
+        this.account = account == null ? null : account.trim();
     }
 
     public String getUsername() {
@@ -31,14 +29,6 @@ public class Tuser {
 
     public void setUsername(String username) {
         this.username = username == null ? null : username.trim();
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account == null ? null : account.trim();
     }
 
     public String getPasswd() {

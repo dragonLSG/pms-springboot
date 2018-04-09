@@ -1,5 +1,9 @@
 package com.dragon.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
 public class Tfeedback {
     private Integer fid;
 
@@ -8,6 +12,10 @@ public class Tfeedback {
     private String content;
 
     private String sender;
+
+    private Date fdate;
+
+    private Short fstatus;
 
     public Integer getFid() {
         return fid;
@@ -39,5 +47,22 @@ public class Tfeedback {
 
     public void setSender(String sender) {
         this.sender = sender == null ? null : sender.trim();
+    }
+
+    public Date getFdate() {
+        return fdate;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
+    public void setFdate(Date fdate) {
+        this.fdate = fdate;
+    }
+
+    public Short getFstatus() {
+        return fstatus;
+    }
+
+    public void setFstatus(Short fstatus) {
+        this.fstatus = fstatus;
     }
 }

@@ -1,6 +1,7 @@
 package com.dragon.pojo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TfeedbackExample {
@@ -371,6 +372,126 @@ public class TfeedbackExample {
 
         public Criteria andSenderNotBetween(String value1, String value2) {
             addCriterion("sender not between", value1, value2, "sender");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateIsNull() {
+            addCriterion("fdate is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateIsNotNull() {
+            addCriterion("fdate is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateEqualTo(Date value) {
+            addCriterion("fdate =", value, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateNotEqualTo(Date value) {
+            addCriterion("fdate <>", value, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateGreaterThan(Date value) {
+            addCriterion("fdate >", value, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateGreaterThanOrEqualTo(Date value) {
+            addCriterion("fdate >=", value, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateLessThan(Date value) {
+            addCriterion("fdate <", value, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateLessThanOrEqualTo(Date value) {
+            addCriterion("fdate <=", value, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateIn(List<Date> values) {
+            addCriterion("fdate in", values, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateNotIn(List<Date> values) {
+            addCriterion("fdate not in", values, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateBetween(Date value1, Date value2) {
+            addCriterion("fdate between", value1, value2, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFdateNotBetween(Date value1, Date value2) {
+            addCriterion("fdate not between", value1, value2, "fdate");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusIsNull() {
+            addCriterion("fstatus is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusIsNotNull() {
+            addCriterion("fstatus is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusEqualTo(Short value) {
+            addCriterion("fstatus =", value, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusNotEqualTo(Short value) {
+            addCriterion("fstatus <>", value, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusGreaterThan(Short value) {
+            addCriterion("fstatus >", value, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusGreaterThanOrEqualTo(Short value) {
+            addCriterion("fstatus >=", value, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusLessThan(Short value) {
+            addCriterion("fstatus <", value, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusLessThanOrEqualTo(Short value) {
+            addCriterion("fstatus <=", value, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusIn(List<Short> values) {
+            addCriterion("fstatus in", values, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusNotIn(List<Short> values) {
+            addCriterion("fstatus not in", values, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusBetween(Short value1, Short value2) {
+            addCriterion("fstatus between", value1, value2, "fstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFstatusNotBetween(Short value1, Short value2) {
+            addCriterion("fstatus not between", value1, value2, "fstatus");
             return (Criteria) this;
         }
     }
